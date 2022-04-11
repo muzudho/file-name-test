@@ -2,8 +2,7 @@ import os
 import glob
 import re
 import sys
-
-from click import ParamType
+from datetime import datetime
 
 # 日本のWindows は "cp932" なので、Unicodeに変換
 sys.stdout.reconfigure(encoding='utf-8')
@@ -86,7 +85,7 @@ while True:
 Enter the parameter type.
 Example: 1:file-creation-year;2:file-creation-month;3:file-creation-day""")
 
-    mappings = {}
+    typeTable = {}
 
     parameterTypes = input()
     parameterTypeArray = parameterTypes.strip().split(";")
@@ -97,20 +96,61 @@ Example: 1:file-creation-year;2:file-creation-month;3:file-creation-day""")
         print(f"keyValueArray len={len(keyValueArray)}")
         print(f"keyValueArray[0]={keyValueArray[0]}")
         print(f"keyValueArray[1]={keyValueArray[1]}")
-        mappings[keyValueArray[0]] = keyValueArray[1]
+        typeTable[keyValueArray[0]] = keyValueArray[1]
 
     # 確認表示
     print("""
 Types
 -----""")
-    for k, v in mappings.items():
+    for k, v in typeTable.items():
         print(f"{k} --> {v}")
 
-    # シミュレーション
+    # 間違い探し
     print("""
-Result
-------""")
+Invalid
+-------""")
+
     for i, file in enumerate(files):
-        print(f"WIP ({i+1}) {basename}")
+        basename = os.path.basename(file)
+        result = pattern.match(basename)
+        if result:
+            # Matched
+            # グループ数
+            groupCount = len(result.groups())
+            buf = f"({i+1}) {basename}"
+            isUnmatched = False
+            for j in range(0, groupCount):
+
+                value = result.group(j+1)
+                typeStr = typeTable[f"{j+1}"]
+
+                if typeStr == "file-creation-year":
+                    tick = os.path.getctime(file)
+                    year = datetime.fromtimestamp(tick).strftime('%Y')
+                    # print(f"file={file} value={value} year={year}")
+                    if value != year:
+                        isUnmatched = True
+
+                elif typeStr == "file-creation-month":
+                    tick = os.path.getctime(file)
+                    month = datetime.fromtimestamp(tick).strftime('%m')
+                    # print(f"file={file} value={value} month={month}")
+                    if value != month:
+                        isUnmatched = True
+
+                elif typeStr == "file-creation-day":
+                    tick = os.path.getctime(file)
+                    day = datetime.fromtimestamp(tick).strftime('%d')
+                    # print(f"file={file} value={value} day={day}")
+                    if value != day:
+                        isUnmatched = True
+
+                buf += f" \\{j+1}=[{value}]"
+
+            if isUnmatched:
+                print(buf)
+        else:
+            # Unmatched
+            print(f"({i+1}) {basename}")
 
     break
