@@ -101,4 +101,7 @@ Invalid
 
 ```plaintext
 1:file-creation-year;2:file-creation-month;3:file-creation-day
+
+# 数字であれば良ければ
+1:digit;2:digit;3:digit
 ```

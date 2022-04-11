@@ -110,6 +110,8 @@ Types
 Invalid
 -------""")
 
+    countOfInvalid = 0
+
     for i, file in enumerate(files):
         basename = os.path.basename(file)
         result = pattern.match(basename)
@@ -145,15 +147,24 @@ Invalid
                     if value != expected:
                         isUnmatched = True
 
+                elif typeStr == "digit":
+                    expected = "#digit#"
+                    if not value.isdigit():
+                        isUnmatched = True
+
                 else:
-                    expected = "#TypeFailed#"
+                    expected = "#type-failed#"
 
                 buf += f" \\{j+1}=[{value}][{expected}]"
 
             if isUnmatched:
                 print(buf)
+                countOfInvalid += 1
         else:
             # Unmatched
             print(f"({i+1}) {basename}")
+            countOfInvalid += 1
 
     break
+
+print(f"Count of invalid = {countOfInvalid}")
