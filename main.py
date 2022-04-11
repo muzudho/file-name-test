@@ -89,13 +89,13 @@ Example: 1:file-creation-year;2:file-creation-month;3:file-creation-day""")
 
     parameterTypes = input()
     parameterTypeArray = parameterTypes.strip().split(";")
-    print(f"parameterTypeArray len={len(parameterTypeArray)}")
+    # print(f"parameterTypeArray len={len(parameterTypeArray)}")
     for keyValuePair in parameterTypeArray:
-        print(f"keyValuePair={keyValuePair}")
+        # print(f"keyValuePair={keyValuePair}")
         keyValueArray = keyValuePair.strip().split(":")
-        print(f"keyValueArray len={len(keyValueArray)}")
-        print(f"keyValueArray[0]={keyValueArray[0]}")
-        print(f"keyValueArray[1]={keyValueArray[1]}")
+        # print(f"keyValueArray len={len(keyValueArray)}")
+        # print(f"keyValueArray[0]={keyValueArray[0]}")
+        # print(f"keyValueArray[1]={keyValueArray[1]}")
         typeTable[keyValueArray[0]] = keyValueArray[1]
 
     # 確認表示
@@ -126,26 +126,29 @@ Invalid
 
                 if typeStr == "file-creation-year":
                     tick = os.path.getctime(file)
-                    year = datetime.fromtimestamp(tick).strftime('%Y')
-                    # print(f"file={file} value={value} year={year}")
-                    if value != year:
+                    expected = datetime.fromtimestamp(tick).strftime('%Y')
+                    # print(f"file={file} value={value} year={expected}")
+                    if value != expected:
                         isUnmatched = True
 
                 elif typeStr == "file-creation-month":
                     tick = os.path.getctime(file)
-                    month = datetime.fromtimestamp(tick).strftime('%m')
-                    # print(f"file={file} value={value} month={month}")
-                    if value != month:
+                    expected = datetime.fromtimestamp(tick).strftime('%m')
+                    # print(f"file={file} value={value} month={expected}")
+                    if value != expected:
                         isUnmatched = True
 
                 elif typeStr == "file-creation-day":
                     tick = os.path.getctime(file)
-                    day = datetime.fromtimestamp(tick).strftime('%d')
-                    # print(f"file={file} value={value} day={day}")
-                    if value != day:
+                    expected = datetime.fromtimestamp(tick).strftime('%d')
+                    # print(f"file={file} value={value} day={expected}")
+                    if value != expected:
                         isUnmatched = True
 
-                buf += f" \\{j+1}=[{value}]"
+                else:
+                    expected = "#TypeFailed#"
+
+                buf += f" \\{j+1}=[{value}][{expected}]"
 
             if isUnmatched:
                 print(buf)
