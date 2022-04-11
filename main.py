@@ -147,6 +147,24 @@ Invalid
                     if value != expected:
                         isUnmatched = True
 
+                elif typeStr == "file-modified-year":
+                    tick = os.path.getmtime(file)
+                    expected = datetime.fromtimestamp(tick).strftime('%Y')
+                    if value != expected:
+                        isUnmatched = True
+
+                elif typeStr == "file-modified-month":
+                    tick = os.path.getmtime(file)
+                    expected = datetime.fromtimestamp(tick).strftime('%m')
+                    if value != expected:
+                        isUnmatched = True
+
+                elif typeStr == "file-modified-day":
+                    tick = os.path.getmtime(file)
+                    expected = datetime.fromtimestamp(tick).strftime('%d')
+                    if value != expected:
+                        isUnmatched = True
+
                 elif typeStr == "digit":
                     expected = "#digit#"
                     if not value.isdigit():

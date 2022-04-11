@@ -100,7 +100,11 @@ Invalid
 型のタイプは以下のように指定する
 
 ```plaintext
+# ファイル作成日時であれば
 1:file-creation-year;2:file-creation-month;3:file-creation-day
+
+# ファイル編集日時であれば
+1:file-modified-year;2:file-modified-month;3:file-modified-day
 
 # 数字であれば良ければ
 1:digit;2:digit;3:digit
